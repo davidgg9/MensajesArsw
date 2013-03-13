@@ -26,15 +26,18 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 
 public class MainWindow extends JFrame {
+	protected String direccionServer ="172.16.1.248";  
 	private List receivedMessages;
 	private JTextArea messageToSend;
 	private JButton sendButton, endButton;
-	private JTextField destiny, myname;
+	private List destiny;
+	private JTextField myname;
 	ReceivedMessagesUpdateThread windowUpdateThread;
+	RecivedUserUpdate userUpdate;
 	public MainWindow(TextArea loginUser) throws HeadlessException {
 		super("MESSENCHAT -"+ loginUser.getText());
 		JPanel botones=new JPanel();
-		destiny=new JTextField();
+		destiny=new List(10,false);
 		myname=new JTextField(loginUser.getText());
 		JPanel addrPanel=new JPanel();
 		addrPanel.setLayout(new FlowLayout());
@@ -52,7 +55,9 @@ public class MainWindow extends JFrame {
 		JScrollPane botJsp=new JScrollPane();	
 		//CREAR Y ASOCIAR EL HILO (SUSCRIPTOR) DE LOS MENSAJES CON LA VENTANA DE TEXTO
 		windowUpdateThread=new ReceivedMessagesUpdateThread(receivedMessages, loginUser.getText());
+		userUpdate = new RecivedUserUpdate(destiny);
 		windowUpdateThread.start();
+		userUpdate.start();
 		topJsp.getViewport().add(receivedMessages);
 		botJsp.getViewport().add(messageToSend);
 		this.getContentPane().add(topJsp,BorderLayout.NORTH);
@@ -65,10 +70,9 @@ public class MainWindow extends JFrame {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						String msg=messageToSend.getText();
-						Message m=new Message(myname.getText(),destiny.getText(),msg);
-						System.out.println(m.getTo() + m.getFrom() + m.getText());
+						Message m=new Message(myname.getText(),destiny.getSelectedItem(),msg);
 						//enviar como evento el objeto m
-						ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://192.168.0.6:61616");
+						ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://" +direccionServer+":61616");
 						Connection connection;
 						try {
 							connection = connectionFactory.createConnection();
@@ -92,7 +96,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Message m=new Message(myname.getText(),destiny.getText(),myname.getText());
+				Message m=new Message(myname.getText(),destiny.getSelectedItem(),myname.getText());
 				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://192.168.0.6:61616");
 				Connection connection;
 				try {

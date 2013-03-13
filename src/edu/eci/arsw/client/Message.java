@@ -14,8 +14,8 @@ public class Message implements Serializable{
 	}
 	public Message(String from2, String to2, String[] items) {
 		super();
-		this.from = from;
-		this.to = to;
+		this.from = from2;
+		this.to = to2;
 		for (int i = 0; i < items.length; i++) {
 			text+=items[i]+",";
 		}

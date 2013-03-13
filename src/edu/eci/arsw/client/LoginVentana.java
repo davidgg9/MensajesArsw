@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class LoginVentana extends JFrame {
+	protected String direccionServer ="172.16.1.248";  
 	private JButton sendButton;
 	private Panel panel;
 	private TextArea loginUser;
@@ -54,7 +55,7 @@ public class LoginVentana extends JFrame {
 	protected void sendNewUser() {
 		Message m=new Message(loginUser.getText(),"gestor",loginUser.getText());
 		//enviar como evento el objeto m
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://192.168.0.6:61616");
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://"+direccionServer+":61616");
 		Connection connection;
 		try {
 			connection = connectionFactory.createConnection();
