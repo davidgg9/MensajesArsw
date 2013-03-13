@@ -12,6 +12,15 @@ public class Message implements Serializable{
 		this.to = to;
 		this.text = text;
 	}
+	public Message(String from2, String to2, String[] items) {
+		super();
+		this.from = from;
+		this.to = to;
+		for (int i = 0; i < items.length; i++) {
+			text+=items[i]+",";
+		}
+		text=text.substring(text.length()-1);
+	}
 	public String getFrom() {
 		return from;
 	}
