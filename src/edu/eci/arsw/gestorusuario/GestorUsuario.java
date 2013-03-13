@@ -1,6 +1,7 @@
 package edu.eci.arsw.gestorusuario;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.List;
 import javax.swing.JFrame;
 
@@ -11,6 +12,7 @@ public class GestorUsuario extends JFrame{
 		listaUsuario = new List(10, false);
 		setSize(200, 500);
 		add(listaUsuario,BorderLayout.CENTER);
+		add(new Button(), BorderLayout.SOUTH);
 	}
 	/**
 	 * @param args
