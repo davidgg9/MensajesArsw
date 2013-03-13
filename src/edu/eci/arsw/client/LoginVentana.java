@@ -60,7 +60,7 @@ public class LoginVentana extends JFrame {
 			connection = connectionFactory.createConnection();
 			connection.start();
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			Destination destination = session.createQueue("Usuarios_Conectados");
+			Destination destination = session.createQueue("nuevoUsuario");
 			MessageProducer producer = session.createProducer(destination);
 			ObjectMessage message = session.createObjectMessage(m); 
 			producer.send(message);
