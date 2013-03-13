@@ -22,7 +22,7 @@ public class ReceivedMessagesUpdateThread extends Thread {
 	public ReceivedMessagesUpdateThread(List receivedMessages) {
 		super();
 		this.area = receivedMessages;
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://localhost:61616");
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://192.168.0.6:61616");
 		try {
 			connection = connectionFactory.createConnection();
 			connection.start();

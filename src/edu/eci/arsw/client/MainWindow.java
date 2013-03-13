@@ -63,7 +63,7 @@ public class MainWindow extends JFrame {
 						Message m=new Message(myname.getText(),destiny.getText(),msg);
 						System.out.println(m.getTo() + m.getFrom() + m.getText());
 						//enviar como evento el objeto m
-						ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://localhost:61616");
+						ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://192.168.0.6:61616");
 						Connection connection;
 						try {
 							connection = connectionFactory.createConnection();
