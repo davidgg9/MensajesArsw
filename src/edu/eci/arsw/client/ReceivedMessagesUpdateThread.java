@@ -15,12 +15,14 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class ReceivedMessagesUpdateThread extends Thread {
 	MessageConsumer consumer=null;
+	String actualUser;
 	Session session;
 	Connection connection;
 	private List area;
 	
-	public ReceivedMessagesUpdateThread(List receivedMessages) {
+	public ReceivedMessagesUpdateThread(List receivedMessages, String user) {
 		super();
+		actualUser=user;
 		this.area = receivedMessages;
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://192.168.0.6:61616");
 		try {
@@ -38,9 +40,9 @@ public class ReceivedMessagesUpdateThread extends Thread {
 		while (true){
 			try {
 				ObjectMessage message = (ObjectMessage)consumer.receive();	
-				if(area.getItemCount()==4) area.remove(0);
-				
-				area.add(((Message)message.getObject()).getFrom());
+				if(area.getItemCount()==10) area.remove(0);
+				System.out.println(((Message)message.getObject()).getTo()+ " . "+ actualUser);
+				if(((Message)message.getObject()).getTo()==actualUser || ((Message)message.getObject()).getTo()=="multicast") area.add(((Message)message.getObject()).getText());
 				Thread.sleep(100);
 			} catch (JMSException e) {
 				throw new RuntimeException("Error on JMS message processing");
