@@ -25,30 +25,22 @@ import edu.eci.arsw.server.DireccionServidor;
 
 
 public class MainWindow extends JFrame {
-
 	private static final long serialVersionUID = 1L;
-
 	private List receivedMessages;
-	
 	private JTextArea messageToSend;
-	
 	private JButton sendButton;
-	
-	private JTextField destiny, myname;
+	private JTextField myname;
+	private List destiny;
 	
 	ReceivedMessagesUpdateThread windowUpdateThread;
-	
 
 	public MainWindow(String user) throws HeadlessException {
 		super("MESSENCHAT- "+user);
-		
-		destiny=new JTextField("DESTINY");
-		
-		myname=new JTextField("MYNAME");
-			
+		destiny=new List();
+		usuariosConectados();
+		myname=new JTextField(user);
 		JPanel addrPanel=new JPanel();
 		addrPanel.setLayout(new FlowLayout());
-		
 		addrPanel.add(destiny);
 		addrPanel.add(myname);
 		
@@ -58,47 +50,52 @@ public class MainWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 		
 		JScrollPane topJsp=new JScrollPane();
-		
 		topJsp.setSize(topJsp.getWidth(),300);
-		
 		JScrollPane botJsp=new JScrollPane();
 		
-		
 		//CREAR Y ASOCIAR EL HILO (SUSCRIPTOR) DE LOS MENSAJES CON LA VENTANA DE TEXTO
-		windowUpdateThread=new ReceivedMessagesUpdateThread(receivedMessages);
+		windowUpdateThread=new ReceivedMessagesUpdateThread(receivedMessages, user);
 		windowUpdateThread.start();
 		
-		
 		topJsp.getViewport().add(receivedMessages);
-		
 		botJsp.getViewport().add(messageToSend);
-		
 		this.getContentPane().add(topJsp,BorderLayout.NORTH);
 		this.getContentPane().add(botJsp,BorderLayout.CENTER);
-		
 		this.getContentPane().add(sendButton,BorderLayout.SOUTH);
-		
 		this.getContentPane().add(addrPanel,BorderLayout.EAST);
 		this.setSize(500,500);
 		
-		
 		sendButton.addActionListener(
 				new ActionListener(){
-
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						String msg=messageToSend.getText();
-						Message m=new Message(myname.getText(),destiny.getText(),msg);
+						Message m=new Message(myname.getText(),destiny.getSelectedItem(),msg);
 						sendMessage(m);
 					}
-					
 				}
-		
 		);
-		
-		
 	}
 	
+	private void usuariosConectados() {
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://"+DireccionServidor.direccionServidor+":61616");
+		Connection connection = connectionFactory.createConnection();
+		connection.start();
+		 
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		Destination destination = session.createTopic("MENSAJE");
+		
+		MessageProducer producer = session.createProducer(destination);
+		ObjectMessage objectMessage = session.createObjectMessage(m); 
+		producer.send(objectMessage);
+		
+		ObjectMessage message = (ObjectMessage)consumer.receive();	
+		if(area.getItemCount()==area.getRows()) area.remove(0);
+		user=((Message)message.getObject()).getTo();
+		if(user==actualUser) area.add(((Message)message.getObject()).getText());
+		Thread.sleep(100);
+	}
+
 	protected void sendMessage(Message m) {
 		try{
 			ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://"+DireccionServidor.direccionServidor+":61616");
@@ -106,9 +103,8 @@ public class MainWindow extends JFrame {
 			connection.start();
 			 
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			 
 			Destination destination = session.createTopic("MENSAJE");
-			 
+			
 			MessageProducer producer = session.createProducer(destination);
 			ObjectMessage objectMessage = session.createObjectMessage(m); 
 			producer.send(objectMessage);
@@ -119,12 +115,5 @@ public class MainWindow extends JFrame {
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
-		
-		
-		
 	}
-	
-	
-	
-	
 }
