@@ -28,7 +28,7 @@ public class GestorUsuarios extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-
+		new GestorUsuarios().setVisible(true);
 	}
 
 }
