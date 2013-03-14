@@ -1,13 +1,23 @@
 package edu.eci.arsw;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
+
+	private String user;
 
 	/**
-	 * @param args
+	 * @param user
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public User(String user) {
+		this.user = user;
 	}
+
+	public String getUser() {
+		return user;
+	}
+	
+	
+	
 
 }
