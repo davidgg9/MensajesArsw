@@ -1,5 +1,6 @@
 package edu.eci.arsw;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,9 +20,10 @@ public class LoginUser extends JFrame {
 	public LoginUser(){
 		super();
 		user= new JTextField();
-		login = new JButton();
+		login = new JButton("Login");
 		setSize(new Dimension(300,100));
-
+		add(user,BorderLayout.CENTER);
+		add(login,BorderLayout.SOUTH);
 
 		login.addActionListener(new ActionListener() {
 
