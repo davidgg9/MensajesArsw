@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import edu.eci.arsw.gestorUsuarios.NewUser;
 import edu.eci.arsw.server.DireccionServidor;
 
 public class LoginUser extends JFrame {
@@ -57,7 +58,7 @@ public class LoginUser extends JFrame {
 			Destination destination = session.createQueue("ni");
 			 
 			MessageProducer producer = session.createProducer(destination);
-			ObjectMessage objectMessage = session.createObjectMessage(new User(user.getText())); 
+			ObjectMessage objectMessage = session.createObjectMessage(new NewUser(user.getText())); 
 			producer.send(objectMessage);
 			
 			producer.close();
