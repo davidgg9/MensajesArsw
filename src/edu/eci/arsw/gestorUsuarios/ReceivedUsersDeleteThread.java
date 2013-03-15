@@ -36,7 +36,12 @@ public class ReceivedUsersDeleteThread extends Thread {
 		while(true){
 			getDeleteUser();
 			sendUsersList();
-
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -59,9 +64,8 @@ public class ReceivedUsersDeleteThread extends Thread {
 		try {
 			ObjectMessage message = (ObjectMessage)consumer.receive();
 			listaUsuario.remove(((NewUser)message.getObject()).getUser());
-			Thread.sleep(100);
+			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 		}
 		
 	}

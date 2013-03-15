@@ -9,46 +9,46 @@ import javax.jms.MessageConsumer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
+import edu.eci.arsw.gestorUsuarios.UpdateUserList;
+import edu.eci.arsw.server.DireccionServidor;
 
-public class ReceivedMessagesUpdateThread extends Thread {
+public class UsersUpdateThread extends Thread {
+	List destiny;
+	String user;
 
-	private List area;
-	private String actualUser;
-	
 	MessageConsumer consumer=null;
 
 	Session session;
 	Connection connection;
-
-	public ReceivedMessagesUpdateThread(List receivedMessages, String user) {
+	public UsersUpdateThread(List destiny, String user) {
 		super();
-		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://localhost:61616");
-		actualUser=user;
+		this.destiny=destiny;
+		this.user =user;
+		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", "tcp://"+DireccionServidor.direccionServidor+":61616");
 		try {
 			connection = connectionFactory.createConnection();
 			connection.start();
 
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-			Destination destination = session.createTopic("MENSAJE");
+			Destination destination = session.createTopic("lu");
 			consumer = session.createConsumer(destination);	
-			this.area = receivedMessages;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
-
-
-	public void run(){
-		String user;
+	public void run (){
 		while (true){
 			try {
 				ObjectMessage message = (ObjectMessage)consumer.receive();	
-				if(area.getItemCount()==area.getRows()) area.remove(0);
-				user=((Message)message.getObject()).getTo();
-				if(user !=null && user.equals(actualUser)) area.add(((Message)message.getObject()).getFrom()+" dice: "+((Message)message.getObject()).getText());
+				String[] userlist=((UpdateUserList)message.getObject()).getUserList();
+				destiny.removeAll();
+				for (int i = 0; i < userlist.length; i++) {
+					if(!userlist[i].equals(user))destiny.add(userlist[i]);
+				}
 				Thread.sleep(100);
 			} catch (JMSException e) {
 				throw new RuntimeException("Error on JMS message processing");
@@ -57,4 +57,6 @@ public class ReceivedMessagesUpdateThread extends Thread {
 			}
 		}
 	}
+
+
 }
