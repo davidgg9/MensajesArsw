@@ -38,6 +38,7 @@ public class MainWindow extends JFrame {
 
 	public MainWindow(String user) throws HeadlessException {
 		super("MESSENCHAT- "+user);
+		this.user =user;
 		destiny=new List();
 		myname=new JTextField(user);
 		JPanel addrPanel=new JPanel();
@@ -87,6 +88,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				closeSesion();
+				setVisible(false);
 				
 			}
 		});

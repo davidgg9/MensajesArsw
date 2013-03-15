@@ -39,7 +39,6 @@ public class ReceivedUsersDeleteThread extends Thread {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -48,9 +47,9 @@ public class ReceivedUsersDeleteThread extends Thread {
 
 	private void sendUsersList() {
 		try {
-			Destination destination = session.createTopic("lu");
+			Destination destination2 = session.createTopic("lu");
 			 
-			MessageProducer producer = session.createProducer(destination);
+			MessageProducer producer = session.createProducer(destination2);
 			ObjectMessage objectMessage = session.createObjectMessage(new UpdateUserList(listaUsuario.getItems())); 
 			producer.send(objectMessage);
 			
